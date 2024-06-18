@@ -1,0 +1,1 @@
+MERGE (node_0:label4{prop6:node_0.prop9})<-[:reltype7]-() ON MATCH SET node_0.prop7 = 1.03 RETURN DISTINCT * , node_0.prop9 AS alias_0

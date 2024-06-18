@@ -5,8 +5,8 @@ from math import inf
 from grammarinator.runtime import *
 from CypherGenerator import CypherGenerator
 
-nodes = []
-edges = []
+nodes = ['test1','test2','hihi','hihihi']
+edges = ['R1','RR','R3']
 paths = []
 aliases = []
 
