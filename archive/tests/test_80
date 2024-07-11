@@ -1,0 +1,1 @@
+ MERGE path_0 = () ON MATCH SET DRUGTREATSDISEASE.prop9 = FALSE, BODYPARTUNDEREXPRESSESGENE.prop5 = TRUE ON MATCH SET CellularComponent.prop7 = NULL, BodyPart.prop1 = NULL, DrugClass.prop9 = NULL ON CREATE SET BodyPart.prop4 = FALSE, CellularComponent.prop9 = 'LIT0', GENEHASMOLECULARFUNCTION.prop1 = 'LIT3' 

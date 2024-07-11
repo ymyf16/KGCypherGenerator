@@ -1,0 +1,1 @@
+ CREATE ({}) RETURN * , BodyPart.prop2  var , BodyPart  var , Drug , DrugClass ORDER BY CellularComponent.prop3 ASCENDING SKIP 0 LIMIT 0 

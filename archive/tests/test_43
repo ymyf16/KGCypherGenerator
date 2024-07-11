@@ -1,0 +1,1 @@
+ MATCH () UNWIND [0] AS unwind_var CREATE path_0 = ({}), ({})<-[:reltype1]-({}) 

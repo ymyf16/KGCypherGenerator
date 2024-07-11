@@ -1,0 +1,1 @@
+ MATCH path_0 = ({})<-[]->()<-[]-()-[]->(), ({}), path_0 = () WHERE TRUE <> 5 MATCH path_0 = ({})<-[]-() WHERE 'LIT4' <= NULL MERGE (node_5{}) ON CREATE SET Gene.prop1 = 'LIT5' ON MATCH SET DISEASELOCALIZESTOANATOMY.prop5 = FALSE, DISEASEASSOCIATESWITHDISEASE.prop2 = NULL, GENEINPATHWAY.prop9 = NULL ; 

@@ -1,0 +1,1 @@
+ MATCH path_0 = ({})-[]->(), () WHERE GENEPARTICIPATESINBIOLOGICALPROCESS.prop7 < [ ] UNWIND [0] AS unwind_var UNWIND [0] AS unwind_var CREATE path_0 = (), ({})-[:reltype2]->({})-[:reltype9]->()-[:reltype4]->({}), path_2 = (), path_1 = (), ({}) RETURN DISTINCT * SKIP 0 ; 

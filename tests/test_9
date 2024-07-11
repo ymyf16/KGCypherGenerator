@@ -1,1 +1,0 @@
-UNWIND [0, 6, 8, 8] AS unwind_var UNWIND [0] AS unwind_var RETURN DISTINCT missing_variable.prop9 AS alias_0, alias_0 AS alias_1, alias_1 AS alias_2, 'LIT3' ORDER BY alias_2.prop7 SKIP 9 LIMIT 69

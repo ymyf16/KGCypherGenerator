@@ -1,0 +1,1 @@
+ UNWIND [0, 5] AS unwind_var MATCH path_0 = () MERGE path_0 = ({})-[:reltype2]->()-[:reltype7]->()<-[:reltype9]-()<-[:reltype9]-()-[:reltype6]->() ON CREATE SET CellularComponent.prop6 = 'LIT8' MERGE path_2 = (:label8) DETACH DELETE GENECOVARIESWITHGENE RETURN DISTINCT * ORDER BY BiologicalProcess.prop3 DESCENDING SKIP 7 LIMIT 1 ; 

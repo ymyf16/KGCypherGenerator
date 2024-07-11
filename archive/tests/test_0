@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var UNWIND [0] AS unwind_var MATCH path_0 = ()<-[*]-({}) SET path_0.prop7 = NULL, BiologicalProcess.prop2 = [ ] RETURN DISTINCT * , NULL  var LIMIT 0 

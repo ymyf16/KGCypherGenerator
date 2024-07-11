@@ -1,0 +1,1 @@
+ MATCH () UNWIND [0] AS unwind_var  WITH BodyPart.prop1  var, Gene  var ORDER BY NULL RETURN DISTINCT 'LIT7', NULL ORDER BY 'LIT2' ASCENDING ; 

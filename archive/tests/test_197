@@ -1,0 +1,1 @@
+ MERGE (node_5{}) RETURN * , BodyPart.prop8 ORDER BY Gene ASCENDING SKIP 0 LIMIT 0 

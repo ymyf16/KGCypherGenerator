@@ -1,0 +1,1 @@
+ MATCH ({})<-[]->(), ({}), ()-[*]->({})-[]-({}), path_0 = (), ()--({})<--() WHERE DrugClass.prop4 > [ ] RETURN * ORDER BY GENEPARTICIPATESINBIOLOGICALPROCESS.prop3, GENEINPATHWAY.prop7, GENEHASMOLECULARFUNCTION.prop1 ASCENDING ; 

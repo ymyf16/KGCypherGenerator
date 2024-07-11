@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var UNWIND [0] AS unwind_var MATCH ()--()<--() UNWIND [0] AS unwind_var SET Drug.prop4 = CHEMICALINCREASESEXPRESSION.prop4, BODYPARTUNDEREXPRESSESGENE.prop8 = Drug, BodyPart.prop6 = GENEASSOCIATESWITHDISEASE.prop9, Gene.prop9 = BodyPart.prop6 RETURN DISTINCT CellularComponent.prop1 SKIP 0 LIMIT 50 

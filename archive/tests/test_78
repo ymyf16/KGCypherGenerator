@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var MATCH path_0 = (), path_0 = () WHERE 'LIT5' > NULL MATCH path_2 = ({}) UNWIND [0] AS unwind_var RETURN DISTINCT * , 'LIT4' 

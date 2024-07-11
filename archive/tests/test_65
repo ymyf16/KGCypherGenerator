@@ -1,0 +1,1 @@
+ MERGE () DETACH DELETE CHEMICALBINDSGENE , BiologicalProcess , DRUGTREATSDISEASE , CellularComponent , Gene 

@@ -1,0 +1,1 @@
+ CREATE path_0 = ({})-[:reltype3]->()-[:reltype1]->()-[:reltype2]->(), (), path_1 = (), path_2 = ()-[:reltype6]->(), (), path_3 = ({}), ({}), () WITH DISTINCT DRUGTREATSDISEASE.prop4  var ORDER BY BodyPart ASCENDING, DrugClass WHERE [ ] > DrugClass.prop8 UNWIND [0] AS unwind_var RETURN DISTINCT * , TRUE  var , NULL , FALSE  var , TRUE  var , TRUE ; 

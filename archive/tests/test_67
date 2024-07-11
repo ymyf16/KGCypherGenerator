@@ -1,0 +1,1 @@
+ CREATE ()-[:reltype6]->({})<-[:reltype6]-({})-[:reltype7]->({})-[:reltype4]->({})-[:reltype5]->()<-[:reltype3]-({}), () RETURN DISTINCT GENEPARTICIPATESINBIOLOGICALPROCESS.prop8  var ORDER BY DrugClass.prop8 DESCENDING, DrugClass.prop7 ASC, GENEPARTICIPATESINBIOLOGICALPROCESS.prop7 DESCENDING, BiologicalProcess, BodyPart.prop5 DESCENDING, DRUGCAUSESEFFECT.prop3 

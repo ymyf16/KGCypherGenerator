@@ -1,0 +1,1 @@
+ UNWIND [0, 3] AS unwind_var UNWIND [0, 6, 8, 8] AS unwind_var MATCH path_0 = (), ()  WITH DRUGCAUSESEFFECT  var ORDER BY DrugClass DESCENDING LIMIT 0 CREATE () ; 

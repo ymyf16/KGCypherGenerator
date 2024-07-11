@@ -1,0 +1,1 @@
+ MERGE ({})-[:reltype5]->()-[:reltype9]->()<-[:reltype3]-() ON CREATE SET DrugClass.prop3 = NULL RETURN DISTINCT FALSE, BodyPart, Drug.prop1  var ORDER BY FALSE, 'LIT5' SKIP 183 LIMIT 0 ; 

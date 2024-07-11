@@ -1,0 +1,1 @@
+ MATCH path_0 = (), () WHERE BodyPart.prop2 <= FALSE  WITH GENECOVARIESWITHGENE.prop6  var, BiologicalProcess.prop5  var, SYMPTOMMANIFESTATIONOFDISEASE.prop1  var, CellularComponent.prop2  var, Gene.prop2  var WHERE BiologicalProcess.prop4 <= 'LIT5' UNWIND [0, 5, 4] AS unwind_var SET BodyPart.prop6 = DISEASELOCALIZESTOANATOMY.prop8 RETURN DISTINCT * , TRUE , NULL  var LIMIT 80 

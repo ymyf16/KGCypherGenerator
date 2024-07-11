@@ -1,0 +1,1 @@
+ MATCH () WHERE [ ] <= 0  WITH DISTINCT GENEINPATHWAY.prop8  var, BodyPart.prop9  var, Drug.prop9  var, GENEREGULATESGENE.prop5  var SKIP 6 CREATE (), path_0 = () ; 

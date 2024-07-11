@@ -1,0 +1,1 @@
+ MATCH path_0 = () SET path_0.prop3 = GENECOVARIESWITHGENE MERGE path_0 = () ON CREATE SET BodyPart.prop6 = 'LIT4' ON CREATE SET GENEASSOCIATESWITHDISEASE.prop2 = 'LIT6', CellularComponent.prop4 = NULL, DrugClass.prop3 = 'LIT3', Drug.prop8 = 'LIT6' MERGE path_0 = () RETURN * , DrugClass.prop5 SKIP 73 ; 

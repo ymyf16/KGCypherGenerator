@@ -1,0 +1,1 @@
+ MATCH path_0 = (), path_1 = ({}) MERGE (node_6:label2{})-[:reltype2]->({})<-[:reltype4]-() CREATE ({})-[:reltype8]->({}), path_0 = (), path_3 = ()-[:reltype3]->()-[:reltype6]->() SET GENEHASMOLECULARFUNCTION.prop3 = 'LIT2', DISEASELOCALIZESTOANATOMY.prop4 = Gene, DRUGTREATSDISEASE.prop7 = NULL ; 

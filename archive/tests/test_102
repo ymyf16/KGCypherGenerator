@@ -1,0 +1,1 @@
+ CREATE path_0 = ()<-[:reltype4]-({}) MERGE (node_0)<-[:reltype5]-({})<-[:reltype1]-() ON MATCH SET node_0.prop2 = NULL ON CREATE SET Gene.prop4 = NULL 

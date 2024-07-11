@@ -1,0 +1,1 @@
+ CREATE ({})-[:reltype9]->(), path_0 = (), path_0 = () WITH DISTINCT DRUGINCLASS.prop3  var, Drug  var ORDER BY 'LIT9' DESC SKIP 6 UNWIND [0, 1, 8, 6, 3, 4, 9] AS unwind_var RETURN TRUE  var ORDER BY 'LIT7', NULL DESC SKIP 1 LIMIT 7 ; 

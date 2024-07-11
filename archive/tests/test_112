@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var MATCH (), ({})<--()-[]->(), path_0 = ({}) WHERE FALSE < 'LIT0' AND GENEHASMOLECULARFUNCTION.prop9 >= [ ] OR BodyPart.prop7 <= 'LIT0' UNWIND [0, 4, 5] AS unwind_var CREATE ({})-[:reltype3]->({}) SET DRUGINCLASS.prop9 = Drug, Drug.prop2 = DRUGTREATSDISEASE.prop5 ; 

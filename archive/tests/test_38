@@ -1,0 +1,1 @@
+ MATCH ({}) DETACH DELETE Drug , GENECOVARIESWITHGENE CREATE path_0 = (), path_0 = (), ()-[:reltype3]->(), path_1 = (), (), path_3 = (), () 

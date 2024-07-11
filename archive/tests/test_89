@@ -1,0 +1,1 @@
+ UNWIND [0, 3] AS unwind_var UNWIND [0] AS unwind_var SET DRUGINCLASS.prop5 = GENEASSOCIATESWITHDISEASE.prop3, DrugClass.prop1 = BodyPart.prop3, BODYPARTUNDEREXPRESSESGENE.prop1 = DRUGTREATSDISEASE, Drug.prop7 = TRUE, BodyPart.prop5 = GENEPARTICIPATESINBIOLOGICALPROCESS.prop8, CellularComponent.prop8 = BiologicalProcess.prop8 

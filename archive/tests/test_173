@@ -1,0 +1,1 @@
+ MATCH path_0 = () UNWIND [0] AS unwind_var MATCH path_1 = ({})<-[*]-()<-->(), () UNWIND [0] AS unwind_var UNWIND [0] AS unwind_var MATCH path_2 = ({}) WHERE 0 > [ ] OR NULL > TRUE MERGE (node_6{})<-[:reltype4]-({})<-[:reltype3]-({}) RETURN DISEASEASSOCIATESWITHDISEASE.prop1 ORDER BY FALSE SKIP 4060 LIMIT 0 

@@ -1,0 +1,1 @@
+ MATCH ({}), ({})-[]->()-[]-()--()-->()-[]->()<--(), path_0 = () RETURN Gene  var, DRUGINCLASS.prop3, path_0.prop3  var, 'LIT5', NULL  var, TRUE, NULL  var, TRUE, GENEASSOCIATEDWITHCELLULARCOMPONENT.prop8 

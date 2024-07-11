@@ -1,0 +1,1 @@
+ UNWIND [0, 2, 9] AS unwind_var MATCH ({}), ({})-[]->(), path_0 = () UNWIND [0] AS unwind_var UNWIND [0, 9] AS unwind_var SET GENEHASMOLECULARFUNCTION.prop2 = 0 ; 

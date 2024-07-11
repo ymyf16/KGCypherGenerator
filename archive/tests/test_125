@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var SET BodyPart.prop2 = SYMPTOMMANIFESTATIONOFDISEASE, BodyPart.prop9 = 'LIT1' 

@@ -1,0 +1,1 @@
+ MATCH path_0 = (), () WHERE [ ] < 'LIT0' OR CellularComponent.prop4 >= FALSE CREATE path_0 = ({}), ({}) DETACH DELETE GENEASSOCIATESWITHDISEASE ; 

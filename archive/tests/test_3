@@ -1,0 +1,1 @@
+ MERGE path_0 = ({}) CREATE path_1 = ()-[:reltype3]->({}), path_0 = ({}) WITH CellularComponent.prop8  var LIMIT 8 MERGE path_0 = (node_2{})<-[:reltype4]-() ON MATCH SET BiologicalProcess.prop5 = 'LIT1' WITH DISTINCT CHEMICALBINDSGENE.prop8  var SKIP 0 MERGE path_0 = () RETURN DISTINCT * , TRUE  var ; 

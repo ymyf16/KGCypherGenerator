@@ -1,0 +1,1 @@
+ MATCH path_0 = (), path_0 = (), ()-[*]-(), (), () WHERE [ ] <= 7 UNWIND [0, 7, 3] AS unwind_var MATCH ({})--()-->()-[*]->()-[]-({})<-->({}), ()<--()-->()<-->() MATCH () WHERE DrugClass.prop3 >= TRUE AND FALSE >= 'LIT6' MERGE path_1 = (node_0)<-[:reltype4]-({}) ; 

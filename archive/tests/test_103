@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var MATCH ()<--()<--({})<-[*..]->({})-->({}), ({}) SET GENEINPATHWAY.prop3 = BiologicalProcess.prop9, Drug.prop7 = DrugClass.prop7 RETURN DRUGCAUSESEFFECT  var ORDER BY BiologicalProcess.prop2 ASCENDING ; 

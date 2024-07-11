@@ -1,0 +1,1 @@
+ MERGE path_0 = () SET DISEASEASSOCIATESWITHDISEASE.prop1 = Drug MERGE path_1 = (node_2:label4)-[:reltype9]->({}) 

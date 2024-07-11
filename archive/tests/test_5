@@ -1,0 +1,1 @@
+ MERGE (:label8{}) SET BODYPARTOVEREXPRESSESGENE.prop6 = GENEASSOCIATESWITHDISEASE MERGE path_0 = (node_6{})-[:reltype5]->() MERGE path_0 = () ; 

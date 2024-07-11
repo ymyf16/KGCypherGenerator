@@ -1,0 +1,1 @@
+ MERGE path_0 = (:label1)-[:reltype3]->()<-[:reltype9]-({})-[:reltype6]->({}) 

@@ -1,0 +1,1 @@
+ CREATE ({})-[:reltype9]->()-[:reltype2]->()<-[:reltype8]-()<-[:reltype7]-()<-[:reltype9]-()<-[:reltype1]-() SET DRUGINCLASS.prop3 = 'LIT0' RETURN DISTINCT DISEASELOCALIZESTOANATOMY.prop5, DrugClass.prop5, NULL  var ORDER BY TRUE LIMIT 0 

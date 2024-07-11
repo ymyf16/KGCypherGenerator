@@ -1,0 +1,1 @@
+ MATCH path_0 = ()-->(), path_0 = () WHERE GENEHASMOLECULARFUNCTION.prop1 >= TRUE AND FALSE <> NULL RETURN * ORDER BY DrugClass DESCENDING, CellularComponent LIMIT 860 ; 

@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var MATCH path_0 = ()--({})-->(), () UNWIND [0] AS unwind_var SET DRUGCAUSESEFFECT.prop6 = NULL, CHEMICALINCREASESEXPRESSION.prop6 = BodyPart, DrugClass.prop9 = DRUGCAUSESEFFECT, DRUGCAUSESEFFECT.prop8 = path_0.prop2, DrugClass.prop3 = CHEMICALBINDSGENE CREATE path_1 = ({}) 

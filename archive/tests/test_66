@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var MATCH path_0 = ()-[*]->({}) WHERE FALSE = NULL AND 'LIT7' < 'LIT7' RETURN DrugClass.prop4, CellularComponent.prop5  var, TRUE  var, BODYPARTUNDEREXPRESSESGENE.prop8, path_0  var ; 

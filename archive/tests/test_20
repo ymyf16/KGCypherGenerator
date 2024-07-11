@@ -1,0 +1,1 @@
+ MERGE path_0 = ()<-[:reltype7]-()-[:reltype4]->({}) ON CREATE SET Gene.prop6 = 'LIT9' ON CREATE SET CellularComponent.prop8 = NULL DETACH DELETE GENECOVARIESWITHGENE RETURN BodyPart, DrugClass.prop4, TRUE, CellularComponent, DISEASELOCALIZESTOANATOMY.prop6, DRUGINCLASS.prop2 ORDER BY Gene, Drug.prop4 SKIP 8 ; 

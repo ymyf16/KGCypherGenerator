@@ -1,0 +1,1 @@
+ MATCH path_0 = (), () SET GENEINPATHWAY.prop3 = SYMPTOMMANIFESTATIONOFDISEASE.prop1 MERGE (:label3)-[:reltype6]->({}) ON CREATE SET GENEINPATHWAY.prop5 = FALSE ON MATCH SET BiologicalProcess.prop1 = 'LIT1', Drug.prop1 = TRUE CREATE ({})<-[:reltype2]-()<-[:reltype2]-(), () ; 

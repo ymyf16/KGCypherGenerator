@@ -1,0 +1,3 @@
+"n"
+"(:Drug {commonName: ""Basiliximab"", nodeID: ""263"", uri: ""http://jdr.bio/ontologies/alzkb.owl#drug_db00074"", xrefCasRN: ""179045-86-4"", xrefDrugbank: ""DB00074""})"
+"(:Drug {commonName: ""Muromonab"", nodeID: ""264"", uri: ""http://jdr.bio/ontologies/alzkb.owl#drug_db00075"", xrefCasRN: ""140608-64-6"", xrefDrugbank: ""DB00075""})"

@@ -1,0 +1,3 @@
+MATCH (gene:Gene {commonName: "-"})<- [:GENEINPATHWAY*2] -(bodypart:BodyPart {commonName: "mammary gland"})<- [:GENEHASMOLECULARFUNCTION] -(disease:Disease {commonName: "Alzheimer Disease, Familial, 3, with Spastic Paraparesis and Unusual Plaques"}) RETURN disease, gene; 
+MATCH (n) RETURN n LIMIT 2; 
+MATCH (m:Gene)-[r]->(Gene) RETURN m,r LIMIT 2;

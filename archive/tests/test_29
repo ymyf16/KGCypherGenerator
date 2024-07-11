@@ -1,0 +1,1 @@
+ UNWIND [0] AS unwind_var MERGE ()-[:reltype2]->()-[:reltype2]->() MERGE (node_5:label8{}) ON MATCH SET Gene.prop6 = FALSE ON CREATE SET DRUGINCLASS.prop6 = NULL CREATE path_0 = (), ()<-[:reltype6]-()-[:reltype4]->(), ({}), ({}), path_0 = ()-[:reltype2]->() MERGE ({})-[:reltype4]->({})-[:reltype1]->()<-[:reltype5]-() 

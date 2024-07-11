@@ -1,0 +1,1 @@
+ UNWIND [0, 1, 2] AS unwind_var UNWIND [0, 9] AS unwind_var MATCH path_0 = () RETURN DISTINCT * , 'LIT8' ORDER BY NULL DESCENDING SKIP 0 LIMIT 2 ; 

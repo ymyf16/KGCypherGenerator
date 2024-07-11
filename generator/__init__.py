@@ -1,2 +1,0 @@
-from .CypherGenerator_nodepth import CypherGenerator
-from .CustomCypherGenerator import CustomCypherGenerator
