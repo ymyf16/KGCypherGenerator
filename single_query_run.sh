@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the file containing the queries
-QUERY_FILE="test_queries.txt"
+QUERY_FILE="/Users/yufeimeng/Desktop/KGCypherGenerator/output_queries.txt"
 
 # Counter to keep track of query numbers
 counter=1

@@ -1,3 +1,0 @@
-"m";"r"
-"(:Gene {commonName: ""TATA-box binding protein"", geneSymbol: ""TBP"", nodeID: ""1"", typeOfGene: ""protein-coding"", uri: ""http://jdr.bio/ontologies/alzkb.owl#gene_tbp"", xrefEnsembl: ""ENSG00000112592"", xrefHGNC: ""11588"", xrefNcbiGene: 6908, xrefOMIM: ""600075""})";"[:GENEPARTICIPATESINBIOLOGICALPROCESS]"
-"(:Gene {commonName: ""TATA-box binding protein"", geneSymbol: ""TBP"", nodeID: ""1"", typeOfGene: ""protein-coding"", uri: ""http://jdr.bio/ontologies/alzkb.owl#gene_tbp"", xrefEnsembl: ""ENSG00000112592"", xrefHGNC: ""11588"", xrefNcbiGene: 6908, xrefOMIM: ""600075""})";"[:GENEPARTICIPATESINBIOLOGICALPROCESS]"
