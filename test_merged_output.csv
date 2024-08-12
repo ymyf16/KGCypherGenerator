@@ -1,0 +1,21 @@
+ID,variables_returned,results_returned
+0,failed,failed
+1,"""n.commonName""","""""""Basiliximab""""""; """"""Muromonab""""""; """"""Trastuzumab"""""""
+2,"""m.commonName"";""m.geneSymbol""","""""""TATA-box binding protein"""""";""""""TBP""""""; """"""PDS5 cohesin associated factor A"""""";""""""PDS5A""""""; """"""PDS5 cohesin associated factor B"""""";""""""PDS5B"""""""
+3,no_result,no_result
+4,no_result,no_result
+5,no_result,no_result
+6,no_result,no_result
+7,no_result,no_result
+8,no_result,no_result
+9,no_result,no_result
+10,no_result,no_result
+11,no_result,no_result
+12,no_result,no_result
+13,no_result,no_result
+14,no_result,no_result
+15,success,success
+16,no_result,no_result
+17,no_result,no_result
+18,no_result,no_result
+19,no_result,no_result

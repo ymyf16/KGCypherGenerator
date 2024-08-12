@@ -1,0 +1,10 @@
+MATCH (biologicalprocess:BiologicalProcess {commonName: "peptidyl-serine dephosphorylation"}) - [:DISEASEASSOCIATESWITHDISEASE*..5] -> (bodypart:BodyPart {commonName: "myometrium"}) RETURN biologicalprocess.commonName;
+MATCH (drugclass:DrugClass {commonName: "M2 Protein Inhibitors"}) - [*3..4] -> (pathway:Pathway {commonName: "y branching of actin filaments"}) RETURN drugclass.commonName;
+MATCH (bodypart:BodyPart {commonName: "cranial suture"}) - [*..5] -> (biologicalprocess:BiologicalProcess {commonName: "osteoclast development"}) WHERE biologicalprocess.commonName = "trachea morphogenesis" RETURN bodypart.commonName;
+MATCH (drug:Drug {commonName: "Gusacitinib"}) - [*2] -> (pathway:Pathway {commonName: "HTLV-I infection - Homo sapiens (human)"}) RETURN pathway.commonName;
+MATCH (molecularfunction:MolecularFunction {commonName: "MHC class I protein complex binding"}) - [*..4] -> (bodypart:BodyPart {commonName: "optic chiasma"}) RETURN bodypart.commonName;
+MATCH (drugclass:DrugClass {commonName: "beta Lactamase Inhibitors"}) - [:GENEINTERACTSWITHGENE] -> (gene:Gene {geneSymbol: "LOC130005287"}) WHERE drugclass.commonName = "Cytochrome P450 2C9 Inducers" RETURN drugclass.commonName;
+MATCH (disease:Disease {commonName: "Prodromal Alzheimer's disease"}) - [*2..] -> (gene:Gene {geneSymbol: "PPIAP1"}) RETURN gene.geneSymbol;
+MATCH (symptom:Symptom {commonName: "Tremor"}) - [*..5] -> (drugclass:DrugClass {commonName: "Decreased Cholesterol Absorption"}) WHERE drugclass.commonName = "Partial Cholinergic Nicotinic Agonists" RETURN symptom.commonName;
+MATCH (symptom:Symptom {commonName: "Hearing Loss, Noise-Induced"}) - [*2..] -> (disease:Disease {commonName: "Lewy Body Variant of Alzheimer Disease"}) WHERE disease.commonName = "Familial Alzheimer's disease of early onset" RETURN symptom.commonName;
+MATCH (drug:Drug {commonName: "Remifentanil"}) - [*..4] -> (bodypart:BodyPart {commonName: "radial nerve"}) WHERE bodypart.commonName = "brachial nerve plexus" RETURN bodypart.commonName;

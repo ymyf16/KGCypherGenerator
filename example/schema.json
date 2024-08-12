@@ -1,0 +1,382 @@
+﻿[
+  {
+    "nodes": [
+      {
+        "identity": -2,
+        "labels": [
+          "Drug"
+        ],
+        "properties": {
+          "name": "Drug",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-2"
+      },
+      {
+        "identity": -7,
+        "labels": [
+          "BodyPart"
+        ],
+        "properties": {
+          "name": "BodyPart",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-7"
+      },
+      {
+        "identity": -4,
+        "labels": [
+          "Gene"
+        ],
+        "properties": {
+          "name": "Gene",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-4"
+      },
+      {
+        "identity": -12,
+        "labels": [
+          "Disease"
+        ],
+        "properties": {
+          "name": "Disease",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-12"
+      },
+      {
+        "identity": -11,
+        "labels": [
+          "Pathway"
+        ],
+        "properties": {
+          "name": "Pathway",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-11"
+      },
+      {
+        "identity": -10,
+        "labels": [
+          "CellularComponent"
+        ],
+        "properties": {
+          "name": "CellularComponent",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-10"
+      },
+      {
+        "identity": -1,
+        "labels": [
+          "Resource"
+        ],
+        "properties": {
+          "name": "Resource",
+          "indexes": [],
+          "constraints": [
+            "Constraint( id=4, name='n10s_unique_uri', type='UNIQUENESS', schema=(:Resource {uri}), ownedIndex=3 )"
+          ]
+        },
+        "elementId": "-1"
+      },
+      {
+        "identity": -5,
+        "labels": [
+          "DrugClass"
+        ],
+        "properties": {
+          "name": "DrugClass",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-5"
+      },
+      {
+        "identity": -6,
+        "labels": [
+          "Symptom"
+        ],
+        "properties": {
+          "name": "Symptom",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-6"
+      },
+      {
+        "identity": -8,
+        "labels": [
+          "BiologicalProcess"
+        ],
+        "properties": {
+          "name": "BiologicalProcess",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-8"
+      },
+      {
+        "identity": -9,
+        "labels": [
+          "MolecularFunction"
+        ],
+        "properties": {
+          "name": "MolecularFunction",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-9"
+      },
+      {
+        "identity": -3,
+        "labels": [
+          "Datatype"
+        ],
+        "properties": {
+          "name": "Datatype",
+          "indexes": [],
+          "constraints": []
+        },
+        "elementId": "-3"
+      }
+    ],
+    "relationships": [
+      {
+        "identity": -9,
+        "start": -4,
+        "end": -11,
+        "type": "GENEINPATHWAY",
+        "properties": {
+          "name": "GENEINPATHWAY"
+        },
+        "elementId": "-9",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-11"
+      },
+      {
+        "identity": -13,
+        "start": -4,
+        "end": -10,
+        "type": "GENEASSOCIATEDWITHCELLULARCOMPONENT",
+        "properties": {
+          "name": "GENEASSOCIATEDWITHCELLULARCOMPONENT"
+        },
+        "elementId": "-13",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-10"
+      },
+      {
+        "identity": -10,
+        "start": -4,
+        "end": -4,
+        "type": "GENEINTERACTSWITHGENE",
+        "properties": {
+          "name": "GENEINTERACTSWITHGENE"
+        },
+        "elementId": "-10",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -3,
+        "start": -2,
+        "end": -4,
+        "type": "CHEMICALDECREASESEXPRESSION",
+        "properties": {
+          "name": "CHEMICALDECREASESEXPRESSION"
+        },
+        "elementId": "-3",
+        "startNodeElementId": "-2",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -19,
+        "start": -12,
+        "end": -12,
+        "type": "DISEASEASSOCIATESWITHDISEASE",
+        "properties": {
+          "name": "DISEASEASSOCIATESWITHDISEASE"
+        },
+        "elementId": "-19",
+        "startNodeElementId": "-12",
+        "endNodeElementId": "-12"
+      },
+      {
+        "identity": -12,
+        "start": -4,
+        "end": -4,
+        "type": "GENECOVARIESWITHGENE",
+        "properties": {
+          "name": "GENECOVARIESWITHGENE"
+        },
+        "elementId": "-12",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -18,
+        "start": -12,
+        "end": -7,
+        "type": "DISEASELOCALIZESTOANATOMY",
+        "properties": {
+          "name": "DISEASELOCALIZESTOANATOMY"
+        },
+        "elementId": "-18",
+        "startNodeElementId": "-12",
+        "endNodeElementId": "-7"
+      },
+      {
+        "identity": -5,
+        "start": -2,
+        "end": -12,
+        "type": "DRUGTREATSDISEASE",
+        "properties": {
+          "name": "DRUGTREATSDISEASE"
+        },
+        "elementId": "-5",
+        "startNodeElementId": "-2",
+        "endNodeElementId": "-12"
+      },
+      {
+        "identity": -15,
+        "start": -6,
+        "end": -12,
+        "type": "SYMPTOMMANIFESTATIONOFDISEASE",
+        "properties": {
+          "name": "SYMPTOMMANIFESTATIONOFDISEASE"
+        },
+        "elementId": "-15",
+        "startNodeElementId": "-6",
+        "endNodeElementId": "-12"
+      },
+      {
+        "identity": -6,
+        "start": -2,
+        "end": -12,
+        "type": "DRUGCAUSESEFFECT",
+        "properties": {
+          "name": "DRUGCAUSESEFFECT"
+        },
+        "elementId": "-6",
+        "startNodeElementId": "-2",
+        "endNodeElementId": "-12"
+      },
+      {
+        "identity": -17,
+        "start": -7,
+        "end": -4,
+        "type": "BODYPARTUNDEREXPRESSESGENE",
+        "properties": {
+          "name": "BODYPARTUNDEREXPRESSESGENE"
+        },
+        "elementId": "-17",
+        "startNodeElementId": "-7",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -1,
+        "start": -2,
+        "end": -4,
+        "type": "CHEMICALBINDSGENE",
+        "properties": {
+          "name": "CHEMICALBINDSGENE"
+        },
+        "elementId": "-1",
+        "startNodeElementId": "-2",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -11,
+        "start": -4,
+        "end": -9,
+        "type": "GENEHASMOLECULARFUNCTION",
+        "properties": {
+          "name": "GENEHASMOLECULARFUNCTION"
+        },
+        "elementId": "-11",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-9"
+      },
+      {
+        "identity": -4,
+        "start": -2,
+        "end": -5,
+        "type": "DRUGINCLASS",
+        "properties": {
+          "name": "DRUGINCLASS"
+        },
+        "elementId": "-4",
+        "startNodeElementId": "-2",
+        "endNodeElementId": "-5"
+      },
+      {
+        "identity": -7,
+        "start": -4,
+        "end": -8,
+        "type": "GENEPARTICIPATESINBIOLOGICALPROCESS",
+        "properties": {
+          "name": "GENEPARTICIPATESINBIOLOGICALPROCESS"
+        },
+        "elementId": "-7",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-8"
+      },
+      {
+        "identity": -14,
+        "start": -4,
+        "end": -12,
+        "type": "GENEASSOCIATESWITHDISEASE",
+        "properties": {
+          "name": "GENEASSOCIATESWITHDISEASE"
+        },
+        "elementId": "-14",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-12"
+      },
+      {
+        "identity": -16,
+        "start": -7,
+        "end": -4,
+        "type": "BODYPARTOVEREXPRESSESGENE",
+        "properties": {
+          "name": "BODYPARTOVEREXPRESSESGENE"
+        },
+        "elementId": "-16",
+        "startNodeElementId": "-7",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -2,
+        "start": -2,
+        "end": -4,
+        "type": "CHEMICALINCREASESEXPRESSION",
+        "properties": {
+          "name": "CHEMICALINCREASESEXPRESSION"
+        },
+        "elementId": "-2",
+        "startNodeElementId": "-2",
+        "endNodeElementId": "-4"
+      },
+      {
+        "identity": -8,
+        "start": -4,
+        "end": -4,
+        "type": "GENEREGULATESGENE",
+        "properties": {
+          "name": "GENEREGULATESGENE"
+        },
+        "elementId": "-8",
+        "startNodeElementId": "-4",
+        "endNodeElementId": "-4"
+      }
+    ]
+  }
+]

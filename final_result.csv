@@ -1,7 +1,0 @@
-"MATCH (gene:Gene {commonName: "-"})<- [:GENEINPATHWAY*2] -(bodypart:BodyPart {commonName: "mammary gland"})<- [:GENEHASMOLECULARFUNCTION] -(disease:Disease {commonName: "Alzheimer Disease, Familial, 3, with Spastic Paraparesis and Unusual Plaques"}) RETURN disease, gene; "&"no_result"
-"MATCH (n) RETURN n LIMIT 2;"" ,"n"
-"(:Drug {commonName: ""Basiliximab"", nodeID: ""263"", uri: ""http://jdr.bio/ontologies/alzkb.owl#drug_db00074"", xrefCasRN: ""179045-86-4"", xrefDrugbank: ""DB00074""})"
-"(:Drug {commonName: ""Muromonab"", nodeID: ""264"", uri: ""http://jdr.bio/ontologies/alzkb.owl#drug_db00075"", xrefCasRN: ""140608-64-6"", xrefDrugbank: ""DB00075""})""
-"MATCH (m:Gene)-[r]->(Gene) RETURN m,r LIMIT 2;"&""m"&"r"
-"(:Gene {commonName: ""TATA-box binding protein"", geneSymbol: ""TBP"", nodeID: ""1"", typeOfGene: ""protein-coding"", uri: ""http://jdr.bio/ontologies/alzkb.owl#gene_tbp"", xrefEnsembl: ""ENSG00000112592"", xrefHGNC: ""11588"", xrefNcbiGene: 6908, xrefOMIM: ""600075""})"&"[:GENEPARTICIPATESINBIOLOGICALPROCESS]"
-"(:Gene {commonName: ""TATA-box binding protein"", geneSymbol: ""TBP"", nodeID: ""1"", typeOfGene: ""protein-coding"", uri: ""http://jdr.bio/ontologies/alzkb.owl#gene_tbp"", xrefEnsembl: ""ENSG00000112592"", xrefHGNC: ""11588"", xrefNcbiGene: 6908, xrefOMIM: ""600075""})"&"[:GENEPARTICIPATESINBIOLOGICALPROCESS]""

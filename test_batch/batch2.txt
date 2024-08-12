@@ -1,0 +1,10 @@
+MATCH (gene:Gene {commonName: "-"}) - [*3..] -> (pathway:Pathway {commonName: "Cargo trafficking to the periciliary membrane"}) WHERE gene.geneSymbol = "LOC129999684" RETURN gene.geneSymbol;
+MATCH (bodypart:BodyPart {commonName: "cardiac septum"}) - [*..3] -> (gene:Gene {geneSymbol: "LINC01467"}) RETURN bodypart.commonName;
+MATCH (molecularfunction:MolecularFunction {commonName: "brain-derived neurotrophic factor binding"}) - [*..8] -> (disease:Disease {commonName: "Familial Alzheimer Disease (FAD)"}) WHERE disease.commonName = "Alzheimer Disease, Early Onset" RETURN disease.commonName;
+MATCH (pathway:Pathway {commonName: "Tight junction - Homo sapiens (human)"}) - [*..3] -> (drug:Drug {commonName: "Prenoxdiazine"}) RETURN drug.commonName;
+MATCH (disease:Disease {commonName: "Alzheimer Disease 9"}) - [:CHEMICALINCREASESEXPRESSION] -> (cellularcomponent:CellularComponent {commonName: "sperm cytoplasmic droplet"}) WHERE cellularcomponent.commonName = "actomyosin" RETURN disease.commonName;
+MATCH (symptom:Symptom {commonName: "Hypergammaglobulinemia"}) - [:SYMPTOMMANIFESTATIONOFDISEASE] -> (cellularcomponent:CellularComponent {commonName: "apicolateral plasma membrane"}) RETURN cellularcomponent.commonName;
+MATCH (drug:Drug {commonName: "AB-8939"}) - [:SYMPTOMMANIFESTATIONOFDISEASE] -> (gene:Gene {geneSymbol: "LOC127270534"}) RETURN drug.commonName;
+MATCH (bodypart:BodyPart {commonName: "carpal region"}) - [*..7] -> (drugclass:DrugClass {commonName: "Aminosalicylic Acids"}) WHERE drugclass.commonName = "Decreased Cell Wall Integrity" RETURN drugclass.commonName;
+MATCH (gene:Gene {geneSymbol: "LOC127818665"}) - [*2] -> (disease:Disease {commonName: "Alzheimer's Disease"}) WHERE gene.commonName = "long intergenic non-protein coding RNA 2452" RETURN disease.commonName;
+MATCH (disease:Disease {commonName: "Non-Alzheimer's dementia (e.g., Lewy body dementia, vascular or multi-infarct dementia; mixed dementia; frontotemporal dementia such as Pick's disease; and dementia related to stroke, Parkinson's or Creutzfeldt-Jakob diseases)"}) - [*2] -> (drug:Drug {commonName: "Pranlukast"}) RETURN drug.commonName;
