@@ -1,10 +1,17 @@
+import logging
 import re
 import random
 import hashlib
 import base64
 import numpy as np
 import copy
+import pandas as pd
+from multiproc import *
 
+
+def group_labels(df, label_col, name_col):
+    grouped = df.groupby(label_col)[name_col].apply(list).to_dict()
+    return grouped
 
 class DepthManager: #TRY TO MAKE DEPTHMANAGER SINGLETON 
     _max_depth = 5  # Default maximum depth
@@ -35,6 +42,28 @@ class DepthManager: #TRY TO MAKE DEPTHMANAGER SINGLETON
     
     # def reset_depth_record(self):
     #     self.depth_record = {}
+
+def depth_control(func):
+    def wrapper(*args, **kwargs):
+        dm = DepthManager.getInstance()
+        if dm.depth == dm._max_depth:
+            print("Max depth reached")
+            return None
+        result = func(*args, **kwargs)
+        dm.depth += 1  # Increment depth after function call
+        return result
+    return wrapper
+
+def class_depth_control(cls):
+    class WrappedClass(cls):  # Create a new class that wraps the original class
+        def __init__(self, *args, **kwargs):
+            dm = DepthManager.getInstance()
+            if dm.depth == dm._max_depth:
+                print("Max depth reached")
+                return None
+            super().__init__(*args, **kwargs)
+            dm.depth += 1
+    return WrappedClass 
 
 class TreeNode:
     depth = 0
@@ -156,29 +185,6 @@ def get_depth(self):
     # updated_depth = sum(child.calculate_individual_depth() if isinstance(child, Relationship) else 0 for child in self.children)
     return updated_depth
 TreeNode.get_depth = get_depth
-
-
-def depth_control(func):
-    def wrapper(*args, **kwargs):
-        dm = DepthManager.getInstance()
-        if dm.depth == dm._max_depth:
-            print("Max depth reached")
-            return None
-        result = func(*args, **kwargs)
-        dm.depth += 1  # Increment depth after function call
-        return result
-    return wrapper
-
-def class_depth_control(cls):
-    class WrappedClass(cls):  # Create a new class that wraps the original class
-        def __init__(self, *args, **kwargs):
-            dm = DepthManager.getInstance()
-            if dm.depth == dm._max_depth:
-                print("Max depth reached")
-                return None
-            super().__init__(*args, **kwargs)
-            dm.depth += 1
-    return WrappedClass 
 
 
 class QueryManager:
@@ -542,6 +548,26 @@ class QueryManager:
 #Evolutionary Algorithm#
 ################
 
+def get_score(individual):
+    return individual.score
+
+def deep_copy_tree(node):
+    if isinstance(node, TreeNode):
+        new_node = TreeNode(copy.deepcopy(node.value))
+        new_node.depth = node.depth
+        new_node.score = node.score
+        new_node.children = [deep_copy_tree(child) for child in node.children]
+        return new_node
+    elif hasattr(node, '__dict__'):
+        return copy.deepcopy(node)
+    else:
+        return node
+def clear_folder(directory_path):
+    # Remove the entire directory
+    shutil.rmtree(directory_path)
+    # Recreate the empty directory
+    os.makedirs(directory_path)
+
 class EvolutionaryAlgorithm:
     def __init__(self, qm, depth_manager, population_size, max_depth, max_generation, mut_rate=0.05):
         self.population_size = population_size
@@ -568,17 +594,14 @@ class EvolutionaryAlgorithm:
     def population_to_query_list(self, population):
         return [tree.to_querystr() for tree in population]
 
-    # def evaluate_population(self, max_workers=5):
-    #     """ Evaluates the entire population and updates fitness scores. """
-    #     self.generation += 1 
-    #     # query_list = self.population_to_query_list(self.tree_population)
-    #     successful_indices, failed_indices = self.run_queries_multithreaded(tree_population=self.tree_population, max_workers=max_workers)
-    #     for index, tree in enumerate(self.tree_population):
-    #         if index in successful_indices:
-    #             tree.score += 1
-    #             self.valid_queries.append(tree)
-    #         elif index in failed_indices:
-    #             tree.score -= 1
+    def evaluate_population(self, max_workers=4):
+        """ Evaluates the entire population and updates fitness scores. """
+        self.generation += 1 
+        query_list = self.population_to_query_list(self.tree_population)
+        x_multi_batch_processing(query_list, batch_size=10, max_workers=max_workers)
+        merge_csv_files(directory='./aggregates', output_file='merged_results.csv')
+        successful_indices, failed_indices, time_failed_indices = get_indices('merged_results.csv')
+        self.update_score(successful_indices, failed_indices, time_failed_indices)
 
 
     def initialize_population(self): #TODO: change to generate till size is satisfied
@@ -600,7 +623,6 @@ class EvolutionaryAlgorithm:
             print(f"Query failed: {e}")
             return False  # Query failed or returned no results
 
-
     def tournament_parent_selection(self, k: int = None):
         """
         Selects the fittest individual from a random sample of the population using a tournament selection approach.
@@ -611,52 +633,68 @@ class EvolutionaryAlgorithm:
         Returns:
         - The fittest individual from the sampled tournament.
         """
-        if k is None:
-            k = self.population_size // 2
         if k > len(self.tree_population):
             raise ValueError("Sample size k cannot be larger than the population size.")
         tournament = random.sample(self.tree_population, k)
-        fittest = max(tournament, key=lambda individual: self.fitness_scores[self.query_ids[individual]])
+        fittest = max(tournament, key=get_score)
         return fittest
-
-    def select_parents(self, num_pairs, k):
-        """
-        Selects pairs of parents for reproduction, ensuring parents within a pair would not repeat.
-
-        Parameters:
-        - num_pairs (int): The number of parent pairs to select.
-
-        Returns:
-        - List of tuples, where each tuple contains two parent individuals.
-        """
-        if num_pairs <= 0:
-            raise ValueError("num_pairs must be a positive integer")
-        elif num_pairs * 2 > len(self.tree_population):
-            raise ValueError("Insufficient population to select the requested number of unique pairs")
-
+    
+    def Selection(self):
         parents = []
-        parent_pairs=[]
-        # selected_individuals = set()  # Keep track of selected individuals
+        for _, tree in enumerate(self.tree_population):
+            if tree.score > 0:
+                parents.append(tree)
+        return parents
+    
+    def Reproduction(self,parents: list):
+        offspring_pool = []
+        for parent in parents:
+            offspring = self.mutate_query(parent)
+            offspring_pool.append(offspring)
+        return offspring_pool
 
-        while len(parents) < num_pairs * 2: #and len(selected_individuals) < len(self.tree_population):
-            parent1 = self.tournament_parent_selection(k)
-            parent2 = self.tournament_parent_selection(k)
-            while parent1 == parent2:
-                parent2 = self.tournament_parent_selection(k)
-            parent_pair = (parent1,parent2)
-            parents.append(parent1)
-            parents.append(parent2)
-            parent_pairs.append(parent_pair)
-        return parent_pairs
+    # def select_parents(self, num_pairs, k):
+    #     """
+    #     Selects pairs of parents with highest scores for reproduction, ensuring parents within a pair would not repeat.
+
+    #     Parameters:
+    #     - num_pairs (int): The number of parent pairs to select.
+
+    #     Returns:
+    #     - List of tuples, where each tuple contains two parent individuals.
+    #     """
+    #     if num_pairs <= 0:
+    #         raise ValueError("num_pairs must be a positive integer")
+    #     elif num_pairs * 2 > len(self.tree_population):
+    #         raise ValueError("Insufficient population to select the requested number of unique pairs")
+
+    #     parents = []
+    #     parent_pairs=[]
+    #     # selected_individuals = set()  # Keep track of selected individuals
+
+    #     while len(parents) < num_pairs * 2: #and len(selected_individuals) < len(self.tree_population):
+    #         parent1 = self.tournament_parent_selection(k)
+    #         parent2 = self.tournament_parent_selection(k)
+    #         while parent1 == parent2:
+    #             parent2 = self.tournament_parent_selection(k)
+    #         parent_pair = (parent1,parent2)
+    #         parents.append(parent1)
+    #         parents.append(parent2)
+    #         parent_pairs.append(parent_pair)
+    #     return parent_pairs
 
     # JUL25: implementing mutation
-    def mutate_query(self, tree):
+        
+    def mutate_query(self, old_tree):
         """
         Randomly mutate either choice based on mut_rate probability below:
         - node label of the query
         - WHERE clause
         And the returned tree query will also have an adjusted RETURN clause
+        Now seems like it will automatically update old_tree in self.tree_population
         """
+        tree = deep_copy_tree(old_tree)
+        self.depth_manager.reset_depth()
         mutations = ['node_label','condition']
         mut_type = random.choice(mutations)
         if type(tree)==TreeNode:
@@ -681,15 +719,15 @@ class EvolutionaryAlgorithm:
         else:
             raise ValueError("The input tree query has to be TreeNode type!")
 
-    def mutation(self):
-        num_to_mutate = int(len(self.tree_population) * self.mut_rate)
-        for _ in range(num_to_mutate):
-            # Randomly pick an individual to mutate
-            individual_index = random.randint(0, len(self.tree_population) - 1)
-            print("mutated index:", individual_index)
-            # Perform mutation on this individual
-            self.tree_population[individual_index] = self.mutate_query(self.tree_population[individual_index])
-        return self.tree_population  
+    # def mutation(self):
+    #     num_to_mutate = int(len(self.tree_population) * self.mut_rate)
+    #     for _ in range(num_to_mutate):
+    #         # Randomly pick an individual to mutate
+    #         individual_index = random.randint(0, len(self.tree_population) - 1)
+    #         print("mutated index:", individual_index)
+    #         # Perform mutation on this individual
+    #         self.tree_population[individual_index] = self.mutate_query(self.tree_population[individual_index])
+    #     return self.tree_population  
 
     def swap(self, tree1, tree2):
         if not tree1.children or not tree2.children:
@@ -739,6 +777,16 @@ class EvolutionaryAlgorithm:
         print("Crossover and Return clause adjustment completed.")
         return tree1_crossover, tree2_crossover
     
+    def update_score(self, successful_indices, failed_indices, time_failed_indices):
+        for i, query in enumerate(self.tree_population):
+            if i in successful_indices:
+                query.score += 2
+                self.valid_queries.append(query)
+            elif i in failed_indices:
+                query.score -= 2
+            elif i in time_failed_indices:
+                query.score -= 5 #punish timeout
+
 
     def output_top_queries(self, top_n):
         """
@@ -769,10 +817,24 @@ class EvolutionaryAlgorithm:
 
 
     def reset_ea(self):
-        # self.depth_manager.reset_depth_record()
+        self.depth_manager.reset_depth()
         self.observed_depths = set()
         self.tree_population = []
         self.str_population = []
         self.fitness_scores = {}
         self.query_ids = {}
         self.generation=0
+        clear_folder('./aggregates')
+        clear_folder('./outputs')
+        clear_folder('./input_batch')
+
+    def Evolve(self):
+        while self.generation <= self.max_generation:
+            self.evaluate_population()
+            parents = self.Selection()
+            offsprings = self.Reproduction(parents)
+            for tree in self.tree_population:
+                del tree
+            self.tree_population = []
+            self.tree_population = offsprings
+            self.generation += 1

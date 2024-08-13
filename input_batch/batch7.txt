@@ -1,0 +1,10 @@
+MATCH (molecularfunction:MolecularFunction {commonName: "activin binding"}) - [*..4] -> (biologicalprocess:BiologicalProcess {commonName: "negative regulation of coenzyme metabolic process"}) WHERE molecularfunction.commonName = "sodium-dependent L-ascorbate transmembrane transporter activity" RETURN biologicalprocess.commonName;
+MATCH (drugclass:DrugClass {commonName: "Increased Norepinephrine Activity"}) - [:DISEASEASSOCIATESWITHDISEASE] -> (bodypart:BodyPart {commonName: "tongue"}) WHERE bodypart.commonName = "cerebellum" RETURN drugclass.commonName;
+MATCH (symptom:Symptom {commonName: "Alien Hand Syndrome"}) - [*1..4] -> (bodypart:BodyPart {commonName: "malleus bone"}) RETURN symptom.commonName;
+MATCH (pathway:Pathway {commonName: "Tay-Sachs Disease"}) - [:DISEASEASSOCIATESWITHDISEASE] -> (molecularfunction:MolecularFunction {commonName: "beta-adrenergic receptor kinase activity"}) WHERE molecularfunction.commonName = "branched-chain-amino-acid transaminase activity" RETURN molecularfunction.commonName;
+MATCH (drugclass:DrugClass {commonName: "Cardiac Rhythm Alteration"}) - [:CHEMICALDECREASESEXPRESSION] -> (drugclass1:DrugClass {commonName: "Increased Diuresis at Loop of Henle"}) RETURN drugclass.commonName;
+MATCH (drug:Drug {commonName: "Silver oxide"}) - [:GENEASSOCIATEDWITHCELLULARCOMPONENT] -> (pathway:Pathway {commonName: "HCN channels"}) RETURN pathway.commonName;
+MATCH (pathway:Pathway {commonName: "Bile acid biosynthesis"}) - [:BODYPARTOVEREXPRESSESGENE] -> (disease:Disease {commonName: "Alzheimer disease, familial, type 3"}) RETURN disease.commonName;
+MATCH (gene:Gene {commonName: "-"}) - [:SYMPTOMMANIFESTATIONOFDISEASE*1] -> (drugclass:DrugClass {commonName: "Sulfones"}) WHERE drugclass.commonName = "Ergolines" RETURN gene.commonName;
+MATCH (drugclass:DrugClass {commonName: "Vinca Alkaloids"}) - [*3..8] -> (gene:Gene {commonName: "-"}) RETURN drugclass.commonName;
+MATCH (symptom:Symptom {commonName: "Transient Tachypnea of the Newborn"}) - [*2..5] -> (pathway:Pathway {commonName: "ErbB4 signaling events"}) RETURN symptom.commonName;

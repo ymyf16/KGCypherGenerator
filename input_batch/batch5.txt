@@ -1,0 +1,10 @@
+MATCH (cellularcomponent:CellularComponent {commonName: "HAUS complex"}) - [*2..] -> (biologicalprocess:BiologicalProcess {commonName: "vacuole organization"}) RETURN biologicalprocess.commonName;
+MATCH (biologicalprocess:BiologicalProcess {commonName: "positive regulation of urine volume"}) - [*3] -> (gene:Gene {commonName: "-"}) WHERE gene.geneSymbol = "MIR520E" RETURN gene.commonName;
+MATCH (biologicalprocess:BiologicalProcess {commonName: "regulation of protein localization to nucleolus"}) - [*3..] -> (cellularcomponent:CellularComponent {commonName: "Derlin-1-VIMP complex"}) RETURN cellularcomponent.commonName;
+MATCH (molecularfunction:MolecularFunction {commonName: "pyruvate dehydrogenase activity"}) - [*..2] -> (drug:Drug {commonName: "S-oxy-L-cysteine"}) RETURN molecularfunction.commonName;
+MATCH (drugclass:DrugClass {commonName: "Barbiturates"}) - [*..5] -> (gene:Gene {geneSymbol: "LOC127897122"}) RETURN drugclass.commonName;
+MATCH (gene:Gene {commonName: "-"}) - [*3] -> (gene1:Gene {geneSymbol: "LOC126862215"}) WHERE gene1.commonName = "-" RETURN gene.geneSymbol;
+MATCH (bodypart:BodyPart {commonName: "diaphysis"}) - [:GENEREGULATESGENE*1..5] -> (cellularcomponent:CellularComponent {commonName: "STAGA complex"}) RETURN cellularcomponent.commonName;
+MATCH (disease:Disease {commonName: "Alzheimer Disease, Early Onset"}) - [*2..] -> (cellularcomponent:CellularComponent {commonName: "gamma-secretase complex"}) WHERE disease.commonName = "Alzheimer Disease, Late Onset" RETURN cellularcomponent.commonName;
+MATCH (disease:Disease {commonName: "Familial Alzheimer Disease (FAD)"}) - [*3..] -> (pathway:Pathway {commonName: "Vitamin A and Carotenoid Metabolism"}) WHERE disease.commonName = "Familial Alzheimer-like prion disease" RETURN disease.commonName;
+MATCH (cellularcomponent:CellularComponent {commonName: "U1 snRNP"}) - [:GENEASSOCIATEDWITHCELLULARCOMPONENT*3..5] -> (symptom:Symptom {commonName: "Halitosis"}) WHERE symptom.commonName = "Anisocoria" RETURN cellularcomponent.commonName;

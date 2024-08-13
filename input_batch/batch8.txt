@@ -1,0 +1,10 @@
+MATCH (pathway:Pathway {commonName: "Isoprenaline Action Pathway"}) - [*2..4] -> (biologicalprocess:BiologicalProcess {commonName: "regulation of glucagon secretion"}) RETURN biologicalprocess.commonName;
+MATCH (bodypart:BodyPart {commonName: "musculoskeletal system"}) - [:CHEMICALBINDSGENE*1..] -> (gene:Gene {commonName: "-"}) RETURN bodypart.commonName;
+MATCH (drugclass:DrugClass {commonName: "Thiazolidinediones"}) - [*2] -> (molecularfunction:MolecularFunction {commonName: "cholesterol binding"}) RETURN drugclass.commonName;
+MATCH (symptom:Symptom {commonName: "Systolic Murmurs"}) - [*..5] -> (drugclass:DrugClass {commonName: "Sigma-1 Receptor Agonists"}) WHERE drugclass.commonName = "Glycopeptides" RETURN drugclass.commonName;
+MATCH (symptom:Symptom {commonName: "Mydriasis"}) - [*2..] -> (biologicalprocess:BiologicalProcess {commonName: "positive regulation of response to DNA damage stimulus"}) RETURN biologicalprocess.commonName;
+MATCH (gene:Gene {geneSymbol: "LRRC38"}) - [*1] -> (bodypart:BodyPart {commonName: "locus ceruleus"}) RETURN gene.commonName;
+MATCH (cellularcomponent:CellularComponent {commonName: "CA3 pyramidal cell dendrite"}) - [:DRUGINCLASS*1..] -> (drugclass:DrugClass {commonName: "Ultrasound Contrast Activity"}) WHERE cellularcomponent.commonName = "serine C-palmitoyltransferase complex" RETURN cellularcomponent.commonName;
+MATCH (gene:Gene {commonName: "-"}) - [:CHEMICALDECREASESEXPRESSION*2..6] -> (cellularcomponent:CellularComponent {commonName: "outer membrane"}) RETURN cellularcomponent.commonName;
+MATCH (molecularfunction:MolecularFunction {commonName: "D1 dopamine receptor binding"}) - [:CHEMICALINCREASESEXPRESSION*1] -> (gene:Gene {commonName: "mitogen-activated protein kinase 4"}) WHERE molecularfunction.commonName = "lactose binding" RETURN molecularfunction.commonName;
+MATCH (symptom:Symptom {commonName: "Body Weight"}) - [:CHEMICALBINDSGENE] -> (bodypart:BodyPart {commonName: "scala tympani"}) WHERE symptom.commonName = "Snoring" RETURN symptom.commonName;

@@ -1,0 +1,31 @@
+ID,variables_returned,results_returned
+0,empty,empty
+1,"""n.commonName""","""""""Basiliximab""""""; """"""Muromonab"""""""
+2,empty,empty
+3,empty,empty
+4,empty,empty
+5,empty,empty
+6,empty,empty
+7,empty,empty
+8,failed,failed
+9,empty,empty
+10,empty,empty
+11,empty,empty
+12,empty,empty
+13,empty,empty
+14,empty,empty
+15,empty,empty
+16,empty,empty
+17,empty,empty
+18,empty,empty
+19,empty,empty
+20,empty,empty
+21,empty,empty
+22,empty,empty
+23,empty,empty
+24,empty,empty
+25,timeout fail,timeout fail
+26,empty,empty
+27,empty,empty
+28,empty,empty
+29,empty,empty
