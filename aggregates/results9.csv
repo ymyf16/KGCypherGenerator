@@ -1,5 +1,4 @@
 variables_returned,results_returned
-empty,empty
 failed,failed
 timeout fail,timeout fail
 timeout fail,timeout fail
@@ -7,5 +6,6 @@ empty,empty
 empty,empty
 empty,empty
 empty,empty
-timeout fail,timeout fail
-timeout fail,timeout fail
+empty,empty
+empty,empty
+empty,empty
