@@ -31,7 +31,10 @@ def write_queries_to_file(queries, filename):
     """Writes a list of queries to a specified file."""
     with open(filename, 'w') as file:
         for query in queries:
-            file.write(query + '\n')
+            if query == None:
+                file.write(None)
+            else:
+                file.write(query + '\n')
 
 def natural_sort_key(s):
     return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', s)]
@@ -153,10 +156,6 @@ def x_multi_batch_processing(query_list, batch_size=10, max_workers=4):
     subprocess.run(['chmod', '+x', 'query_batch_timeout.sh'])
     logging.basicConfig(level=logging.INFO)
 
-    # with Manager() as manager:
-    #     counter = manager.Value('i', 0)  # Shared counter
-        
-        # Use ThreadPoolExecutor to process batches in parallel
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         executor.map(x_process_batch, range(num_batches), [query_list]*num_batches, [batch_size]*num_batches)
 

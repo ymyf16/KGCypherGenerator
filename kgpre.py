@@ -148,7 +148,6 @@ class Relationship(TreeNode):
         # self.children = children if children is not None else []
         self.hop_only = True if hop_only else False
         
-    @depth_control
     def __str__(self):
         # if not self.children:
             # return str(self.value)
@@ -297,6 +296,7 @@ class QueryManager:
         print("No node labels available. Please import grouped info first.")
         return None
 
+    @depth_control
     def add_hop(self):
         """
         Randomly generate hops as condition to relationship based on a customizable possibility;
@@ -317,7 +317,7 @@ class QueryManager:
             return ''
 
 
-
+    @depth_control
     def add_relationship(self, bi_dir_p=0.3, rev_dir_p=0.5, hop_only_p=0.2, hop_p=0.2):
         """ 
         Randomly generate a relationship between two nodes 
@@ -361,6 +361,7 @@ class QueryManager:
         """
         if for_ea == True:
             current_depth = 0 #to make sure as long as WHERE is found in previous query, it will be replaced only by chance and not depth
+            where_p = 0 #make sure when mutation chose condition, will 100% add
         else:
             current_depth = self.dm.depth
         if random.random() > where_p and current_depth < self.dm._max_depth:
@@ -372,8 +373,12 @@ class QueryManager:
             node_idx = np.where(node_checks)
             node_children = np_children[node_idx]
             random_node = random.choice(node_children)
+            # print("original tree children nodes:",np_children,"node_children:",node_children,"random_node chosen:",random_node )
+
+
 
             alias, node_label = self.extract_alias_label(random_node.value)
+            # print("alias and label extracted from random node:", alias, node_label)
             # alias, node_label = random.choice(list(self.selected_label_alias.items()))
             # print(alias, node_label)
 
@@ -393,7 +398,9 @@ class QueryManager:
                 return Condition("WHERE", [Clause(f'''{alias}.{property_label} {operator} "{value}"''', [])])
             else:
                 raise ValueError("No available properties for the label selected:", {node_label})
-        return 
+        else:
+            return ''
+        
     
     @staticmethod
     def is_relationship(part):
@@ -413,7 +420,6 @@ class QueryManager:
         else:   
             print("input has to be str!")
             return None
-        
 
     
     def get_usable_labels(self):
@@ -468,6 +474,7 @@ class QueryManager:
         if isinstance(tree, TreeNode) and isinstance(tree.children, list):
             for child in tree.children:
                 # Extract label from the current node's value and add it to usable labels
+               
                 child_value = str(child.value)
                 # print(child_value, type(child_value))
                 # label = self.extract_node_alias(child_value)
@@ -497,7 +504,7 @@ class QueryManager:
                 tree.children[-1] = new_return  # Replace the last child with the new RETURN clause
             else:
                 tree.add_child(new_return)  # Add new if no RETURN exists
-            # print("updated return:",tree.children[-1])
+            # print("updated return:", new_return, tree.children[-1], type(tree.children[-1]))
             return tree
         else:
             return None
@@ -569,44 +576,51 @@ def clear_folder(directory_path):
     os.makedirs(directory_path)
 
 class EvolutionaryAlgorithm:
-    def __init__(self, qm, depth_manager, population_size, max_depth, max_generation, mut_rate=0.05):
-        self.population_size = population_size
+    def __init__(self, qm, depth_manager, initial_population_size, min_population_size, max_population_size, max_depth, max_generation, max_workers=4):
+        
+        self.initial_population_size = initial_population_size
+        self.min_population_size = min_population_size
+        self.max_population_size = max_population_size
+        self.current_population_size = initial_population_size
+        
+        # Thresholds for adjusting population size
+        self.low_validity_threshold = 0.1  # 10% valid queries
+        self.high_validity_threshold = 0.5  # 50% valid queries
+        
+        # Rate of population size change
+        self.growth_rate = 1.5
+        self.shrink_rate = 0.9
+
         self.max_depth = max_depth
         self.tree_population = []
         self.str_population = []
-        self.fitness_scores = {}
-        self.query_ids = {}
-        self.observed_depths = set() #TODO: clear this set after each initializED population
+        
         self.qm = qm
         self.depth_manager = depth_manager
         self.depth_manager.set_max_depth(self.max_depth)
-        # self.database_conn = database_conn
+
         self.generation = 0
         self.max_generation = max_generation
-        self.mut_rate = mut_rate
-
-        # self.host = host
-        # self.port = port
+        self.max_workers = max_workers
 
         self.valid_queries = [] #store queries with score = 2 across all generations
+        self.failed_queries = {} #store execution failed or timeout failed queries with scores that should be deducted
 
             
     def population_to_query_list(self, population):
         return [tree.to_querystr() for tree in population]
-
-    def evaluate_population(self, max_workers=4):
-        """ Evaluates the entire population and updates fitness scores. """
-        self.generation += 1 
-        query_list = self.population_to_query_list(self.tree_population)
-        x_multi_batch_processing(query_list, batch_size=10, max_workers=max_workers)
-        merge_csv_files(directory='./aggregates', output_file='merged_results.csv')
-        successful_indices, failed_indices, time_failed_indices = get_indices('merged_results.csv')
-        self.update_score(successful_indices, failed_indices, time_failed_indices)
+        # query_list = []
+        # for i, tree_node in enumerate(population):
+        #     if i not in self.failed_queries:
+        #         query_list.append(tree_node.to_querystr())
+        #     else:
+        #         query_list.append(None)  # Placeholder for failed queries
+        # return query_list
 
 
     def initialize_population(self): #TODO: change to generate till size is satisfied
         """ Initializes the population with random depth queries. """
-        for _ in range(self.population_size):
+        for _ in range(self.initial_population_size):
             # self.depth_manager.set_max_depth(self.max_depth)
             tree, query = self.qm.generate_query()
             self.tree_population.append(tree)
@@ -639,19 +653,19 @@ class EvolutionaryAlgorithm:
         fittest = max(tournament, key=get_score)
         return fittest
     
-    def Selection(self):
-        parents = []
-        for _, tree in enumerate(self.tree_population):
-            if tree.score > 0:
-                parents.append(tree)
-        return parents
+    # def Selection(self):
+    #     parents = []
+    #     for _, tree in enumerate(self.tree_population):
+    #         if tree.score > 0:
+    #             parents.append(tree)
+    #     return parents
     
-    def Reproduction(self,parents: list):
-        offspring_pool = []
-        for parent in parents:
-            offspring = self.mutate_query(parent)
-            offspring_pool.append(offspring)
-        return offspring_pool
+    # def Reproduction(self,parents: list):
+    #     offspring_pool = []
+    #     for parent in parents:
+    #         offspring = self.mutate_query(parent)
+    #         offspring_pool.append(offspring)
+    #     return offspring_pool
 
     # def select_parents(self, num_pairs, k):
     #     """
@@ -685,97 +699,98 @@ class EvolutionaryAlgorithm:
 
     # JUL25: implementing mutation
         
-    def mutate_query(self, old_tree):
+    def mutate(self, old_tree):
         """
         Randomly mutate either choice based on mut_rate probability below:
         - node label of the query
         - WHERE clause
         And the returned tree query will also have an adjusted RETURN clause
-        Now seems like it will automatically update old_tree in self.tree_population
         """
-        tree = deep_copy_tree(old_tree)
+        tree = copy.deepcopy(old_tree)
         self.depth_manager.reset_depth()
         mutations = ['node_label','condition']
         mut_type = random.choice(mutations)
-        if type(tree)==TreeNode:
+        if isinstance(tree,TreeNode):
             if mut_type == 'condition':
+                logging.info("mutating Condition")
                 # mutated_condition = self.qm.add_condition(for_ea=True)
                 for index, element in enumerate(tree.children):
                     if 'WHERE' in str(element.value):
-                        children_source = tree.children[:index] + tree.children[index+1:]
+                        logging.info("found WHERE")
+                        children_source = tree.children[:index]#.extend(tree.children[index+1:])
                         tree.children[index] = self.qm.add_condition(children_source, for_ea=True)
-                    else:
-                        mut_type = 'node_label' #ensure mutation takes place for selected queries without WHERE clause
-            if mut_type == 'node_label':
+                        # print("mutated condition.", type(tree.children[index]),tree.children[index])
+                        tree = self.qm.adjust_return(tree)
+                        self.depth_manager.reset_depth()
+                        return tree
+                #Or, if the query doesn't have WHERE clause yet, add one 
+                logging.info("WHERE not found, adding condition")
+                tree.children[-1] = self.qm.add_condition(tree.children, for_ea=True)
+
+            elif mut_type == 'node_label':
+                logging.info("mutating Node")
                 # mutated_node = self.qm.add_node()
                 indices = []
                 for index, element in enumerate(tree.children):
-                    if type(element)==Node:
+                    if isinstance(element, Node):
                         indices.append(index)
-                ind = random.choice(indices)
-                tree.children[ind] = self.qm.add_node()
+                randind = random.choice(indices)
+                tree.children[randind] = self.qm.add_node()
+                # print("mutated node.",type(tree.children[randind]),tree.children[randind])
+
             tree = self.qm.adjust_return(tree)
+            self.depth_manager.reset_depth()
             return tree
         else:
             raise ValueError("The input tree query has to be TreeNode type!")
 
-    # def mutation(self):
-    #     num_to_mutate = int(len(self.tree_population) * self.mut_rate)
-    #     for _ in range(num_to_mutate):
-    #         # Randomly pick an individual to mutate
-    #         individual_index = random.randint(0, len(self.tree_population) - 1)
-    #         print("mutated index:", individual_index)
-    #         # Perform mutation on this individual
-    #         self.tree_population[individual_index] = self.mutate_query(self.tree_population[individual_index])
-    #     return self.tree_population  
+    # def swap(self, tree1, tree2):
+    #     if not tree1.children or not tree2.children:
+    #         print("One of the trees does not have children to perform swapping.")
+    #         return
+    #     # Select random subtree indices from both trees
+    #     index1 = random.randint(0, len(tree1.children) - 1)
+    #     index2 = random.randint(0, len(tree2.children) - 1)
 
-    def swap(self, tree1, tree2):
-        if not tree1.children or not tree2.children:
-            print("One of the trees does not have children to perform swapping.")
-            return
-        # Select random subtree indices from both trees
-        index1 = random.randint(0, len(tree1.children) - 1)
-        index2 = random.randint(0, len(tree2.children) - 1)
+    #     tree1_swap = copy.deepcopy(tree1)
+    #     tree2_swap = copy.deepcopy(tree2)
 
-        tree1_swap = copy.deepcopy(tree1)
-        tree2_swap = copy.deepcopy(tree2)
+    #     # Swap the subtrees
+    #     tree1_swap.children[index1], tree2_swap.children[index2] = \
+    #         tree2_swap.children[index2], tree1_swap.children[index1]
+    #     print("Swapping completed.")
+    #     return tree1_swap, tree2_swap
 
-        # Swap the subtrees
-        tree1_swap.children[index1], tree2_swap.children[index2] = \
-            tree2_swap.children[index2], tree1_swap.children[index1]
-        print("Swapping completed.")
-        return tree1_swap, tree2_swap
+    # def one_point_crossover(self, tree1, tree2):
+    #     if not tree1.children or not tree2.children:
+    #         raise ValueError("One of the trees does not have children to perform crossover.")
+    #     #get indices that are not relationships as possible crossover point
+    #     node_indices1 = [index for index, child in enumerate(tree1.children) if type(child)!= Relationship]
+    #     node_indices2 = [index for index, child in enumerate(tree2.children) if type(child)!= Relationship]
 
-    def one_point_crossover(self, tree1, tree2):
-        if not tree1.children or not tree2.children:
-            print("One of the trees does not have children to perform crossover.")
-            return
-        #get indices that are not relationships as possible crossover point
-        node_indices1 = [index for index, child in enumerate(tree1.children) if type(child)!= Relationship]
-        node_indices2 = [index for index, child in enumerate(tree2.children) if type(child)!= Relationship]
+    #     #check node existence
+    #     if not node_indices1 or not node_indices2:
+    #         print("No nodes available for crossover in one or both trees.")
+    #         return
 
-        #check node existence
-        if not node_indices1 or not node_indices2:
-            print("No nodes available for crossover in one or both trees.")
-            return
+    #     #select random node indices from the filtered lists
+    #     index1 = random.choice(node_indices1[:-1])
+    #     available_spots_for_tree2 = [index for index, child in enumerate(tree2.children) if type(child)== type(tree1.children[index1])]
+    #     index2 = random.choice(available_spots_for_tree2)
 
-        #select random node indices from the filtered lists
-        index1 = random.choice(node_indices1[:-1])
-        index2 = random.choice(node_indices2[:-1])
+    #     #exchange the subtrees at these indices
+    #     tree1_crossover = copy.deepcopy(tree1)
+    #     tree2_crossover = copy.deepcopy(tree2)
 
-        #exchange the subtrees at these indices
-        tree1_crossover = copy.deepcopy(tree1)
-        tree2_crossover = copy.deepcopy(tree2)
-
-        tree1_crossover.children[index1:], tree2_crossover.children[index2:] = \
-            tree2_crossover.children[index2:], tree1_crossover.children[index1:]
+    #     tree1_crossover.children[index1:], tree2_crossover.children[index2:] = \
+    #         tree2_crossover.children[index2:], tree1_crossover.children[index1:]
         
-        #adjust RETURN clause based on exchanged trees
-        tree1_crossover = self.qm.adjust_return(tree1_crossover)
-        tree2_crossover = self.qm.adjust_return(tree2_crossover)
+    #     #adjust RETURN clause based on exchanged trees
+    #     tree1_crossover = self.qm.adjust_return(tree1_crossover)
+    #     tree2_crossover = self.qm.adjust_return(tree2_crossover)
 
-        print("Crossover and Return clause adjustment completed.")
-        return tree1_crossover, tree2_crossover
+    #     print("Crossover and Return clause adjustment completed.")
+    #     return tree1_crossover, tree2_crossover
     
     def update_score(self, successful_indices, failed_indices, time_failed_indices):
         for i, query in enumerate(self.tree_population):
@@ -784,8 +799,13 @@ class EvolutionaryAlgorithm:
                 self.valid_queries.append(query)
             elif i in failed_indices:
                 query.score -= 2
+                # self.failed_queries[query]= -2
             elif i in time_failed_indices:
                 query.score -= 5 #punish timeout
+                # self.failed_queries[query]= -5
+            else: #punish empty result rubbish queries
+                query.score -= 0.5 
+                # self.failed_queries[query] = -0.5
 
 
     def output_top_queries(self, top_n):
@@ -818,23 +838,214 @@ class EvolutionaryAlgorithm:
 
     def reset_ea(self):
         self.depth_manager.reset_depth()
-        self.observed_depths = set()
         self.tree_population = []
         self.str_population = []
-        self.fitness_scores = {}
-        self.query_ids = {}
         self.generation=0
         clear_folder('./aggregates')
         clear_folder('./outputs')
         clear_folder('./input_batch')
+    
+    def clear_for_next_ea(self):
+        self.depth_manager.reset_depth()
+        clear_folder('./aggregates')
+        clear_folder('./outputs')
+        clear_folder('./input_batch')
+
+        f = open("merged_results.csv", "w")
+        f.truncate()
+        f.close()
+
+
+
+###################### Aug 16, implementing new functions ###########################
+    def get_rel_node(self, query:TreeNode):
+        relationships = []
+        nodes = []
+        for node in query.children:
+            nodestr = str(node)
+            if type(node) == Node:
+                pattern = r':\s*([A-Za-z_]+)'
+                match = re.search(pattern, nodestr)
+                if match:
+                    nodestr = match.group(1)
+                nodes.append(nodestr)
+            elif type(node) == Relationship:
+                relationships.append(nodestr)
+            else:
+                continue
+        relationship_set = set(relationships)
+        node_set = set(nodes)
+        return relationship_set, node_set
+    
+    def get_info(self):
+        """ 
+        Get the unique relationship,node,and depth types in the current tree_population.
+        """
+        total_rel = set()
+        total_node = set()
+        total_depth = []
+        for query in self.tree_population:
+            rels, nodes = self.get_rel_node(query)
+            depth = query.get_depth()
+            total_rel.update(rels)
+            total_node.update(nodes)
+            total_depth.append(depth)
+        total_depth = set(total_depth)
+        return total_rel, total_node, total_depth
+
+
+    def coverage_metric(self, query:TreeNode):
+        reltypes, nodetypes = self.get_rel_node(query)
+        complexity = query.get_depth() #int
+
+        #as long as there is uniqueness in either reltype or nodetype compared to existing population, reward
+        rel_info, node_info, depth_info = self.get_info() #lists of currently covered rels, nodes, depths in self.tree_population
+        query_set = reltypes.union(nodetypes)
+        existing_set = rel_info.union(node_info)
+        unique = query_set - existing_set #find if any ele in query set is unique 
+        if unique:
+            coverage = 1
+        else:
+            coverage = -1
+
+        if complexity in depth_info:
+            complexity_diversity = -0.5
+        else:
+            complexity_diversity = 0.5
+
+        weight_type_coverage = 0.7
+        weight_complexity = 0.2
+        weight_complexity_div = 0.1
+
+        score = (weight_type_coverage * coverage) + (weight_complexity * complexity) + (weight_complexity_div * complexity_diversity)
+
+        return score
+    
+    def evaluate_population(self, input_population:list):
+        """ 
+        Evaluates the entire population and updates fitness scores. 
+        First, the function will update basic scores of queries based on their execution results on Memgraph. 
+        Then, the function will evaluate the weighted diversity and coverage of types of valid queries.
+        
+        input_population: typically being self.tree_population. It has to be a list of TreeNode types.
+        """
+        ##Validity Check##
+        max_workers = self.max_workers
+        # if input_population[0] != TreeNode:
+        #     raise ValueError("The input population has to be a list of TreeNode types!") 
+        query_list = self.population_to_query_list(input_population)
+        x_multi_batch_processing(query_list, batch_size=10, max_workers=max_workers)
+        merge_csv_files(directory='./aggregates', output_file='merged_results.csv')
+        successful_indices, failed_indices, time_failed_indices = get_indices('merged_results.csv')
+        self.update_score(successful_indices, failed_indices, time_failed_indices)
+        logging.info("Validity check done")
+
+        ##Coverage metric##
+        for i, query in enumerate(input_population):
+            if i not in failed_indices or time_failed_indices:
+                coverage_score = self.coverage_metric(query)
+                query.score += coverage_score
+            else:
+                continue
+        logging.info("Coverage metric done")
+
+    #####Implementing population size adjustment#######
+    def get_valid_query_percentage(self):
+        valid_queries = sum(1 for individual in self.tree_population if individual in self.valid_queries)
+        return valid_queries / self.current_population_size
+
+
+    def adjust_population_size(self):
+        valid_percentage = self.get_valid_query_percentage()
+        
+        if valid_percentage < self.low_validity_threshold:
+            self.increase_population_size()
+        elif valid_percentage > self.high_validity_threshold:
+            self.decrease_population_size()
+    
+    def increase_population_size(self):
+        new_size = min(int(self.current_population_size * self.growth_rate), self.max_population_size)
+        if new_size > self.current_population_size:
+            additional_individuals = self.generate_new_individuals(new_size - self.current_population_size)
+            self.tree_population.extend(additional_individuals)
+            self.current_population_size = new_size
+            logging.info(f"Population increased to {self.current_population_size}")
+
+    def decrease_population_size(self):
+        new_size = max(int(self.current_population_size * self.shrink_rate), self.min_population_size)
+        if new_size < self.current_population_size:
+            self.tree_population = self.select_best_individuals(self.tree_population, new_size)
+            self.current_population_size = new_size
+            logging.info(f"Population decreased to {self.current_population_size}")
+
+    def generate_new_individuals(self, count):
+        # Implementation depends on your specific method of generating new individuals
+        new_individuals = []
+        for _ in range(count):
+            tree, _ = self.qm.generate_query()
+            new_individuals.append(tree)
+        return new_individuals
+
+    def select_best_individuals(self, population, count):
+        # Select the best 'count' individuals from the population
+        return sorted(population, key=lambda x: x.score, reverse=True)[:count]
+
+    ####implement this later :(
+
+    # def select_best_with_diversity(combined, size):
+    #     # Sort by fitness
+    #     sorted_individuals = sort_by_fitness(combined)
+        
+    #     # Ensure 20% of new population returns results
+    #     min_valid = int(0.2 * size)
+    #     valid_queries = [ind for ind in sorted_individuals if ind.returns_results()]
+        
+    #     new_population = valid_queries[:min_valid]
+    #     remaining_slots = size - len(new_population)
+        
+    #     # Fill remaining slots with best individuals
+    #     new_population.extend(sorted_individuals[:remaining_slots])
+        
+    #     return new_population
+
 
     def Evolve(self):
+        self.clear_for_next_ea()
+        self.evaluate_population(self.tree_population)
+        logging.info("Evaluation done")
         while self.generation <= self.max_generation:
-            self.evaluate_population()
-            parents = self.Selection()
-            offsprings = self.Reproduction(parents)
+            logging.info(f"Generation {self.generation} starts parent selection and mutation")
+            offspring = []
+            while len(offspring) < self.current_population_size:
+                parent = self.tournament_parent_selection(k=3)
+                # parent2 = self.tournament_parent_selection(k=3)
+                # child = self.one_point_crossover(parent1, parent2)
+                child = self.mutate(parent)
+                offspring.append(child)
+            logging.info("Current generation of mutation done")
+            self.evaluate_population(offspring)
+            logging.info("Evaluation done")
+            
+            if self.generation % 5 == 0:
+                # Full generational replacement every 5th generation
+                updated_pop = self.select_best_individuals(offspring, self.current_population_size)
+            else:
+                # Steady-state replacement
+                current_pop = copy.deepcopy(self.tree_population)
+                current_pop.extend(offspring)
+                # combined = current_pop 
+                updated_pop = self.select_best_individuals(current_pop, self.current_population_size)
             for tree in self.tree_population:
                 del tree
             self.tree_population = []
-            self.tree_population = offsprings
+            self.tree_population = updated_pop
+
+            self.adjust_population_size()
+
             self.generation += 1
+
+            self.clear_for_next_ea()
+
+        final_queries = self.population_to_query_list(self.tree_population)
+
+        return final_queries
