@@ -125,10 +125,17 @@ final = ea.Evolve()
 ```
 All the current generation of queries will be stored in the ea.tree_population as `TreeNode` type. `TreeNode` type contains children as a list of childs with specific types (Node, Relationship, Condition, Clause) -- also where the EA is strongly-typed. And the specific value in str type within each child can be retrieved as `child.value`. 
 
-The scoring of individual queries is based primarily on whether the random query returns results from mgconsole, which requires relatively intensive computation. So here we utilize multithreading as a helper to this step of calculation as performed in the mega function Evolve() from EvolutionaryAlgorithm class:
+The scoring of individual queries is based primarily on the Validity of queries (by checking results returned from mgconsole) and the Coverage Metric score of queries weighted as below:
+```
+weight_type_coverage = 0.7
+weight_complexity = 0.2
+weight_complexity_div = 0.1
+
+score = (weight_type_coverage * coverage) + (weight_complexity * complexity) + (weight_complexity_div * complexity_diversity)
+```
 
 
-**The sample result is coming soon...**
+**The sample large-scale result is coming soon...**
 
 
 
