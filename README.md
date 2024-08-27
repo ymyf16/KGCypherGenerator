@@ -106,6 +106,8 @@ Using AlzKB knowledge graph as example, we can first generate a customizable siz
 
 ```
 from kgpre import *
+from multiproc import *
+
 dm = DepthManager.getInstance()
 qm = QueryManager(dm=dm)
 
@@ -114,27 +116,19 @@ qm.import_grouped_info(alzkb_nested_dict)
 qm.import_relationships(relationships)  
 
 # Initialize EA
-ea = EvolutionaryAlgorithm(qm=qm, depth_manager=dm, population_size=100, max_depth=4, max_generation=3)
+ea = EvolutionaryAlgorithm(qm=qm, depth_manager=dm, initial_population_size=10,max_depth=4, max_generation=3, min_population_size=10,max_population_size=100)
+ea.reset_ea()
 ea.initialize_population()
-ea.Evolve()
+
+# To get final result of query list, simply implement this line of code below:
+final = ea.Evolve()
 ```
-All the current generation of queries will be stored in the ea.tree_population as `TreeNode` type. `TreeNode` type contains children as a list of childs with specific types (Node, Relationship, Condition, Clause). And the specific value within each child can be retrieved as `child.value`. 
+All the current generation of queries will be stored in the ea.tree_population as `TreeNode` type. `TreeNode` type contains children as a list of childs with specific types (Node, Relationship, Condition, Clause) -- also where the EA is strongly-typed. And the specific value in str type within each child can be retrieved as `child.value`. 
 
 The scoring of individual queries is based primarily on whether the random query returns results from mgconsole, which requires relatively intensive computation. So here we utilize multithreading as a helper to this step of calculation as performed in the mega function Evolve() from EvolutionaryAlgorithm class:
-```
-def Evolve(self):
-    while self.generation <= self.max_generation:
-        self.evaluate_population()
-        parents = self.Selection()
-        offsprings = self.Reproduction(parents)
-        for tree in self.tree_population:
-            del tree
-        self.tree_population = []
-        self.tree_population = offsprings
-        self.generation += 1
-```
 
-**More is coming soon...**
+
+**The sample result is coming soon...**
 
 
 
