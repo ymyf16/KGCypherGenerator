@@ -135,8 +135,6 @@ score = (weight_type_coverage * coverage) + (weight_complexity * complexity) + (
 ```
 
 
-**The sample large-scale result is coming soon...**
-
 
 
 
